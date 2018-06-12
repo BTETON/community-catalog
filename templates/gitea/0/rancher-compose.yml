@@ -1,82 +1,87 @@
-version: '2'
-catalog:
+---
+version: "2"
+.catalog:
   name: "Gitea"
-  version: "v1.4.2"
-  description: "A painless self-hosted Git service."
-  uuid: gitea-0
-  minimum_rancher_version: v0.56.0
-  maintainer: "Konrad Langenberg <k@knt.li>"
+  version: "v1.2.1-1"
+  description: "Git with a cup of tea"
+  minimum_rancher_version: "v1.2.0"
   questions:
-    - variable: http_port
-      description: "Public HTTP port to access Gitea's webui."
-      label: "HTTP Port"
+    - variable: "GITEA_DATABASE_SERVICE"
+      label: "Gitea Database Service"
+      description: "The database service to use"
       required: true
-      default: "3000" 
-      type: "int"
-    - variable: ssh_port
-      description: "Public ssh port to clone repositories via ssh."
-      label: "SSH Port"
-      required: true
-      default: "2222"
-      type: "int"
-    - variable: "volume_driver"
-      description: "Volume driver to associate with this service."
-      label: "Volume Driver"
-      required: true
-      default: "local"
-      type: enum
-      options: # List of options if using type of `enum`
-        - local
-        - rancher-nfs
-        - rancher-efs
-        - rancher-ebs
-    - variable: "db_link"
-      description: "External DB service to use with gitea instead of its own DB-Container."
-      label: "External DB service"
-      default: ""
-      required: false
       type: "service"
-    - variable: mysql_password
-      description: "MySQL root password to use for Gitea."
-      label: "MySQL Password"
+    - variable: "GITEA_SERVER_SSH_PORT"
+      label: "Gitea Ssh Port"
+      description: "ssh port to access gitea cli"
       required: true
-      default: "default_pass"
+      default: "10022"
+      type: "int"
+    - variable: "GITEA_SERVER_DOMAIN"
+      label: "Domain name of your server."
+      description: "Domain name of your server."
+      required: true
+      type: "string"
+    - variable: "GITEA_SERVICE_ENABLE_NOTIFY_MAIL"
+      label: "Gitea mail notify watchers"
+      description: "Enable this to send e-mail to watchers of repository when something happens like creating issues, requires Mailer to be enabled."
+      required: true
+      default: "false"
+      type: "boolean"
+    - variable: "GITEA_SERVICE_ENABLE_REVERSE_PROXY_AUTHENTICATION"
+      label: "Gitea considers users authenticated if X-Forwarded-User is set"
+      description: "Enable this if you want to use external authentication with a reverse proxy"
+      required: true
+      default: "false"
+      type: "boolean"
+    - variable: "GITEA_SERVICE_ENABLE_REVERSE_PROXY_AUTO_REGISTRATION"
+      label: "Gitea auto-creates users using X-Forwarded-User"
+      description: "Enable this if you want gitea to create users if REVERSE_PROXY_AUTHENTICATION is enabled"
+      required: true
+      default: "false"
+      type: "boolean"
+    - variable: "GITEA_SERVICE_DISABLE_REGISTRATION"
+      label: "Gitea enable registration of new users"
+      description: "Enable this if you want only administrators to create accounts"
+      required: true
+      default: "false"
+      type: "boolean"
+    - variable: "GITEA_SERVICE_SHOW_REGISTRATION_BUTTON"
+      label: "Gitea show registration button on login page"
+      description: "Disable this if you do not want users to create new accounts by clicking on the button"
+      required: true
+      default: "true"
+      type: "boolean"
+    - variable: "GITEA_MAILER_ENABLED"
+      label: "Gitea mail enabled"
+      description: "Enable this to use a mail service."
+      required: true
+      default: "false"
+      type: "boolean"
+    - variable: "GITEA_MAILER_FROM"
+      label: "Gitea mailer from"
+      description: "Mail from address, RFC 5322. This can be just an email address, or the “Name” <email@example.com> format."
+      required: false
+      default: "mail@gitea.example.com"
+      type: "string"
+    - variable: "GITEA_MAILER_HOST"
+      label: "Gitea SMTP mail host address and port (example: smtp.gitea.io:587)"
+      description: "Note, if the port ends with '465', SMTPS will be used. Using STARTTLS on port 587 is recommended per RFC 6409. If the server supports STARTTLS it will always be used.)"
+      required: false
+      default: "smtp.example.com:25"
+      type: "string"
+    - variable: "GITEA_MAILER_USER"
+      label: "Gitea mailer user"
+      description: "User name of mailer (usually just your e-mail address)."
+      required: false
+      type: "string"
+    - variable: "GITEA_MAILER_PASSWD"
+      label: "Gitea mailer password"
+      description: "Password of mailer."
+      required: false
       type: "password"
-services:
-  gitea:
-    scale: 1
-    retain_ip: true
-    health_check:
-      response_timeout: 2000
-      healthy_threshold: 2
-      port: 3000
-      unhealthy_threshold: 3
-      initializing_timeout: 300000
-      interval: 2000
-      strategy: recreate
-      request_line: GET "/" "HTTP/1.0"
-      reinitializing_timeout: 120000
-  lb:
-    scale: 1
-    start_on_create: true
-    lb_config:
-      certs: []
-      port_rules:
-      - priority: 1
-        protocol: http
-        service: gitea
-        source_port: ${http_port}
-        target_port: 3000
-      - priority: 2
-        protocol: tcp
-        service: gitea
-        source_port: ${ssh_port}
-        target_port: 22
-    health_check:
-      response_timeout: 2000
-      healthy_threshold: 2
-      port: 42
-      unhealthy_threshold: 3
-      initializing_timeout: 60000
-      interval: 2000
-      reinitializing_timeout: 60000
+    - variable: "GITEA_MAILER_SKIP_VERIFY"
+      label: "Gitea mailer skip verify self signed certificates"
+      description: "Do not verify the self-signed certificates."
+      default: false
+      type: "boolean"

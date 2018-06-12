@@ -1,20 +1,63 @@
-# Gitea - Git with a cup of tea
+Rancher catalog template for Gitea
+==================================
 
-> A painless self-hosted Git service.
+[Gitea](https://gitea.io) - Git with a cup of tea
 
-Gitea is a community managed fork of Gogs, lightweight code hosting solution written in Go and published under the MIT license.
+Parameters
+----------
 
-## Installation
+### GITEA_DATABASE_SERVICE
 
-Note the mysql-root password from below, you will need it during installation.
+The database service to use.
 
-When launching Gitea for the first time, you will greeted with an installer. You'll need to change two things: 
+### GITEA_SERVER_SSH_PORT
 
-* The database settings:
-  * Username: `root`
-  * Password: the previously mentioned password
-  * Database: `gitea`
-  * Database Host: `db:3306`
-* Change the domain name to the one you use to access Gitea
-* Change the public ssh port to the one you defined earlier if you want to enable ssh
-* Change the public URL to the one you defined previously, this is needed to access Gitea's web UI.
+SSH port to access Gitea cli.
+
+### GITEA_SERVER_DOMAIN
+
+Domain name of your server.
+
+### GITEA_SERVICE_ENABLE_NOTIFY_MAIL
+
+Enable this to send e-mail to watchers of repository when something happens like creating issues, requires Mailer to be enabled.
+
+### GITEA_SERVICE_ENABLE_REVERSE_PROXY_AUTHENTICATION
+
+Gitea considers users authenticated if X-Forwarded-User is set.
+
+### GITEA_SERVICE_ENABLE_REVERSE_PROXY_AUTO_REGISTRATION
+
+Enable this if you want gitea to create users if REVERSE_PROXY_AUTHENTICATION is enabled.
+
+### GITEA_SERVICE_DISABLE_REGISTRATION
+
+Enable this if you want only administrators to create accounts.
+
+### GITEA_SERVICE_SHOW_REGISTRATION_BUTTON
+
+Disable this if you do not want users to create new accounts by clicking on the button.
+
+### GITEA_MAILER_ENABLED
+
+Enable this to use a mail service.
+
+### GITEA_MAILER_FROM
+
+Mail from address, RFC 5322. This can be just an email address, or the “Name” <email@example.com> format.
+
+### GITEA_MAILER_HOST
+
+Note, if the port ends with '465', SMTPS will be used. Using STARTTLS on port 587 is recommended per RFC 6409. If the server supports STARTTLS it will always be used.)
+
+### GITEA_MAILER_USER
+
+User name of mailer (usually just your e-mail address).
+
+### GITEA_MAILER_PASSWD
+
+Password of mailer.
+
+### GITEA_MAILER_SKIP_VERIFY
+
+Do not verify the self-signed certificates.
