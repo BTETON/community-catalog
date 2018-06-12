@@ -2,9 +2,9 @@
 version: "2"
 .catalog:
   name: "Gitea"
-  version: "v1.2.1-1"
-  description: "Git with a cup of tea"
-  minimum_rancher_version: "v1.2.0"
+  version: "v1.4.2-0"
+  description: "Git with a cup of tea changed by bteton"
+  minimum_rancher_version: "v1.5.0"
   questions:
     - variable: "GITEA_DATABASE_SERVICE"
       label: "Gitea Database Service"
