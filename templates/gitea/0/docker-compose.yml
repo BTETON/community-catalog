@@ -16,7 +16,7 @@ services:
       - gitea-conf
 
   gitea-conf:
-    image: camptocamp/gitea-conf:20170928-4
+    image: camptocamp/gitea-conf:20180309-1
     labels:
       io.rancher.container.start_once: 'true'
     environment:
@@ -34,3 +34,11 @@ services:
       GITEA_MAILER_USER: ${GITEA_MAILER_USER}
       GITEA_MAILER_PASSWD: ${GITEA_MAILER_PASSWD}
       GITEA_MAILER_SKIP_VERIFY: ${GITEA_MAILER_SKIP_VERIFY}
+  gitlb:
+    image: rancher/lb-service-haproxy:v0.9.1
+    ports:
+    - 443:443/tcp
+    labels:
+      io.rancher.container.agent.role: environmentAdmin,agent
+      io.rancher.container.agent_service.drain_provider: 'true'
+      io.rancher.container.create_agent: 'true'
